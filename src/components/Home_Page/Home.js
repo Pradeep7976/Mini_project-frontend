@@ -19,7 +19,7 @@ function Home() {
         setdetails(response.data);
         seturl(response.data.imageurl);
       });
-  }, []);
+  }, [details, url]);
   return (
     <>
       <Header url={url} name={details.name} />

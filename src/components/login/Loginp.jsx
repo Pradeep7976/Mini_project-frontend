@@ -37,7 +37,7 @@ function Loginp() {
     };
     console.log(dat);
     axios
-      .post(Port + "/api/user/login", dat)
+      .post(port + "/api/user/login", dat)
       .then((res) => {
         if (res.data.auth) {
           localStorage.setItem("token", res.data.token);

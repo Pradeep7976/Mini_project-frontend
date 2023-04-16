@@ -17,6 +17,7 @@ import Pdetails from "./components/Problem_Details/Pdetails";
 import Thank from "./components/Thank_You/Thank_You";
 import Department from "./components/Department_Page/Department";
 import Probdetails from "./components/Department_Problem_Details/DepProbDetails";
+import DeptLogin from "./components/Department_login/Loginp";
 /////////////////////////////////
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
             <Route path="/greet" element={<Thank />} />
             <Route path="/dept/:department" element={<Department />} />
             <Route path="/probdetails/:pid" element={<Probdetails />} />
+            <Route path="/dept/login" element={<DeptLogin />} />
             <Route path="/temp" element={<Temp />} />
           </Routes>
         </Router>

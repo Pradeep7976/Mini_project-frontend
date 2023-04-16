@@ -20,15 +20,15 @@ const Progres = () => {
   const [total, settotal] = useState(0);
   const [solvedcount, setsolvedcount] = useState(0);
   useEffect(() => {
-    axios.get(Port + "/api/reportprob/solvedcount").then((response) => {
+    axios.get(port + "/api/reportprob/solvedcount").then((response) => {
       console.log("Solved " + response.data);
-      setsolvedcount(response.data);
+      setsolvedcount(parseInt(response.data));
     });
-    axios.get(Port + "/api/reportprob/totalcount").then((response) => {
+    axios.get(port + "/api/reportprob/totalcount").then((response) => {
       console.log("Total " + response.data);
-      settotal(response.data);
+      settotal(parseInt(response.data));
     });
-  }, []);
+  }, [total, solvedcount]);
   return (
     <>
       <Container

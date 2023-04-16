@@ -45,7 +45,6 @@ const R_Problems = (props) => {
   function flag(pid) {
     console.log(pid);
     axios.post(port + "/api/dept/flag", { pid: pid }).then((result) => {
-      
       console.log(result);
       window.location.reload();
     });

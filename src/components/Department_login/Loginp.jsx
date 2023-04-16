@@ -13,14 +13,15 @@ import {
   Input,
   Link,
   Stack,
+  Select,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 function Loginp() {
-  const [phone, setphone] = useState("");
   const [passwordd, setpassword] = useState("");
-  const [showpassword, setshowpassword] = useState(false);
+  const [showpassword, setshowpassword] = useState(true);
   const [passtext, setpasstext] = useState("password");
+  const [depart, setdepart] = useState("Select Department");
   // eslint-disable-next-line
   const port = "http://localhost:7000";
   // eslint-disable-next-line
@@ -32,22 +33,22 @@ function Loginp() {
   }
   function clicki() {
     const dat = {
-      phone: phone,
+      depart: depart,
       password: passwordd,
     };
     console.log(dat);
     axios
-      .post(Port + "/api/user/login", dat)
+      .post(port + "/api/dept/login", dat)
       .then((res) => {
         if (res.data.auth) {
-          localStorage.setItem("token", res.data.token);
-          localStorage.setItem("uid", res.data.uid);
-          navigate("/");
+          localStorage.setItem("tokendept", res.data.token);
+          localStorage.setItem("did", res.data.did);
+          navigate("/dept/" + res.data.did);
         }
       })
       .catch((err) => {
         alert("alert INVALID Password or phone" + err);
-        navigate("/login");
+        navigate("/dept/login");
       });
   }
   return (
@@ -74,19 +75,121 @@ c-22.4,3-38.4,9.2-47.8,18.3c-11.2,10.9-13.6,26.7-16.3,45c-3.1,20.8-6.6,44.4-25.3
               <Heading className="text" fontSize={"2xl"}>
                 Sign in to your account
               </Heading>
+
               <FormControl className="text" id="phone">
-                <FormLabel>phone</FormLabel>
-                <Input
-                  type="text"
+                <Select
+                  mt="4"
+                  size="lg"
+                  color="white"
+                  placeholder="Select Department"
+                  value={depart}
                   onChange={(e) => {
-                    if (e.target.value.length > 10) {
-                      e.target.value = e.target.value.slice(0, 10);
-                    }
-                    setphone(e.target.value.toString());
+                    setdepart(e.target.value);
+                    console.log(e.target.value);
                   }}
-                  maxLength={35}
-                />
+                >
+                  <option
+                    style={{
+                      backgroundColor: "#0099ff",
+                      color: "black",
+                    }}
+                    value="Muncipal Corporation"
+                    onClick={(e) => {
+                      console.log("e.target.value");
+                    }}
+                    onSelect={() => {
+                      "s";
+                    }}
+                    onChange={() => {
+                      console.log("sdfsdf");
+                    }}
+                  >
+                    Muncipal Corporation
+                  </option>
+                  <option
+                    style={{
+                      backgroundColor: "#0099ff",
+                      color: "black",
+                    }}
+                    value="Solid Waste Management Department"
+                  >
+                    Solid Waste Management Department
+                  </option>
+                  <option
+                    style={{
+                      backgroundColor: "#0099ff",
+                      color: "black",
+                    }}
+                    value="Electric Department"
+                  >
+                    Electric Department
+                  </option>
+                  <option
+                    style={{
+                      backgroundColor: "#0099ff",
+                      color: "black",
+                    }}
+                    value="Town Planning Departmemnt"
+                  >
+                    Town Planning Departmemnt
+                  </option>
+                  <option
+                    style={{
+                      backgroundColor: "#0099ff",
+                      color: "black",
+                    }}
+                    value="Public Health Department"
+                  >
+                    Public Health Department
+                  </option>
+                  <option
+                    style={{
+                      backgroundColor: "#0099ff",
+                      color: "black",
+                    }}
+                    value="Department of Water and Sanitation "
+                  >
+                    Department of Water and Sanitation
+                  </option>
+                  <option
+                    style={{
+                      backgroundColor: "#0099ff",
+                      color: "black",
+                    }}
+                    value="Drainage Department"
+                  >
+                    Drainage Department
+                  </option>
+                  <option
+                    style={{
+                      backgroundColor: "#0099ff",
+                      color: "black",
+                    }}
+                    value="Ministry of Road and Highway"
+                  >
+                    Ministry of Road and Highway
+                  </option>
+                  <option
+                    style={{
+                      backgroundColor: "#0099ff",
+                      color: "black",
+                    }}
+                    value="State Pollution Control Board"
+                  >
+                    State Pollution Control Board
+                  </option>
+                  <option
+                    style={{
+                      backgroundColor: "#0099ff",
+                      color: "black",
+                    }}
+                    value="Public Works Department"
+                  >
+                    Public Works Department
+                  </option>
+                </Select>
               </FormControl>
+
               <HStack>
                 <FormControl className="text" id="password">
                   <FormLabel>Password</FormLabel>
@@ -98,7 +201,7 @@ c-22.4,3-38.4,9.2-47.8,18.3c-11.2,10.9-13.6,26.7-16.3,45c-3.1,20.8-6.6,44.4-25.3
                     maxLength={35}
                   />
                 </FormControl>
-                <Center>
+                <Center pl="4" pt="7">
                   {showpassword ? (
                     <AiFillEye
                       onClick={() => {
@@ -126,13 +229,7 @@ c-22.4,3-38.4,9.2-47.8,18.3c-11.2,10.9-13.6,26.7-16.3,45c-3.1,20.8-6.6,44.4-25.3
                   align={"start"}
                   justify={"space-between"}
                 >
-                  <Link
-                    fontSize={12}
-                    color={"whiteAlpha.900"}
-                    onClick={regestr}
-                  >
-                    Create one?
-                  </Link>
+                  
                 </Stack>
                 <Button colorScheme={"blue"} variant={"solid"} onClick={clicki}>
                   Sign in
