@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Divider,
   Flex,
@@ -7,15 +7,52 @@ import {
   Avatar,
   Box,
   Badge,
+  Link,
 } from "@chakra-ui/react";
 import { Image, Button, Card, CardBody } from "@chakra-ui/react";
 import { ChevronLeftIcon, InfoIcon } from "@chakra-ui/icons";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 const DepProbDetails = () => {
+  const Port = "https://expensive-hem-elk.cyclic.app";
+  const port = "http://localhost:7000";
   let params = useParams();
-  const uid = params.uid;
+
   const pid = params.pid;
-  useEffect(()=>{})
+  const [problem, setproblem] = useState({});
+  const [uid, setuid] = useState(0);
+  const [count, setcount] = useState(0);
+  const [noofdays, setnoofdays] = useState(0);
+  const [userdetails, setuserdetails] = useState({});
+  useEffect(() => {
+    axios
+      .get(port + "/api/reportprob/details/" + pid)
+      .then((result) => {
+        setproblem(result.data);
+        setuid(result.data.uid);
+        console.log(result.data);
+      })
+      .catch((e) => {
+        console.log(e);
+        // alert(e);
+      });
+    axios.post(port + "/api/user/details", { uid: uid }).then((result) => {
+      setuserdetails(result.data);
+      console.log(result.data);
+    });
+    axios
+      .get(port + "/api/reportprob/probcount/" + uid.toString())
+      .then((result) => {
+        setcount(result.data.count);
+        console.log(result.data.count);
+      });
+    axios
+      .get(port + "/api/reportprob/reported/" + pid.toString())
+      .then((result) => {
+        console.log(result);
+        if (result.data != null) setnoofdays(result.data.timeelapsed);
+      });
+  }, [uid, count, noofdays]);
   return (
     <>
       <Flex bg="black" pt="3" pb="3" mb="10">
@@ -48,30 +85,27 @@ const DepProbDetails = () => {
         >
           <strong>Problem Reported By...</strong>
         </Text>
-        <Avatar
-          ml="3"
-          mt="3"
-          mb="3"
-          size="lg"
-          src="https://bit.ly/sage-adebayo"
-        />
+        <Avatar ml="3" mt="3" mb="3" size="lg" src={userdetails.imageurl} />
         <Text>
-          <strong>Name : </strong>Name of the person
+          <strong>{"Name : "} </strong>
+          {userdetails.name}
         </Text>
         <Text>
-          <strong>Age :</strong> Age of the person
+          <strong>{"Age : "}</strong> {userdetails.age}
         </Text>
         <Text>
-          <strong>Phone :</strong>Phone no.of the person
+          <strong>{"Phone : "}</strong>
+          {userdetails.phone}
         </Text>
         <Text>
-          <strong>Email :</strong>Email of the person
+          <strong>{"Email : "}</strong>
+          {userdetails.email}
         </Text>
         <Text color="blue.600">
-          <Badge colorScheme="blue">City</Badge> : City Name{" "}
+          <Badge colorScheme="blue">City</Badge> : {userdetails.city}
         </Text>
         <Text color="green">
-          <Badge colorScheme="green">Problems Reported</Badge> No. of Prblms
+          <Badge colorScheme="green">Problems Reported</Badge> {count}
         </Text>
       </Box>
       <Card
@@ -101,42 +135,44 @@ const DepProbDetails = () => {
               <Text fontSize="xl" as="span">
                 <strong>Name :</strong>{" "}
               </Text>
-              <Text as="span">Name of the problem</Text>
+              <Text as="span">{problem.name}</Text>
               <Text>
                 <Text fontSize="xl">
                   <strong>Description :</strong>{" "}
                 </Text>
-                <Text mb="5">
-                  This will be full description about the problem.This will be
-                  full description about the problem.This will be full
-                  description about the problem.
-                </Text>
+                <Text mb="5">{problem.description}</Text>
               </Text>
               <Divider mb="5" />
               <Text mb="2" color="blue.600">
                 <Badge colorScheme="blue" fontSize={"sm"}>
                   Location
                 </Badge>{" "}
-                : Full Location
+                ": Full Location Link "
+                <Link
+                  href={`https://www.google.com/maps/search/?api=1&query=${problem.latitude},${problem.longitude}`}
+                >
+                  Google map
+                </Link>
               </Text>
+
               <Text mb="2" color="blue.600">
                 <Badge colorScheme="blue" fontSize={"sm"}>
                   Date
                 </Badge>{" "}
-                : Date Reported
+                : {new Date(problem.formatdate).toLocaleDateString("en-GB")}
               </Text>
 
               <Text color="red" mb="2">
                 <Badge colorScheme="red" fontSize={"sm"}>
                   Problem persisted for :{" "}
                 </Badge>{" "}
-                No.of days
+                {noofdays}
               </Text>
               <Text color="green">
                 <Badge colorScheme="green" fontSize={"sm"}>
                   Acknowledgement Number :{" "}
                 </Badge>{" "}
-                #Ack{" "}
+                {problem.pid}
               </Text>
             </Text>
           </CardBody>
@@ -150,8 +186,8 @@ const DepProbDetails = () => {
             pb="2"
             objectFit="cover"
             maxW={{ base: "100%", sm: "200px" }}
-            src="https://images.unsplash.com/photo-1667489022797-ab608913feeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=800&q=60"
-            alt="Caffe Latte"
+            src={problem.imageurl}
+            alt="Image missing"
           />
         </vStack>
       </Card>

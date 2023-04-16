@@ -20,31 +20,56 @@ import "./R_Problems.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 const reported_problems = Problems;
+//
+//
+//
+//
+//
+//
+
 const R_Problems = (props) => {
   const Port = "https://expensive-hem-elk.cyclic.app";
   const port = "http://localhost:7000";
-  const name = props.name;
   const [problems, setproblems] = useState([]);
-  //   console.log(name);
+  const [name, setname] = useState("");
   let navigate = useNavigate();
-  useEffect(() => {
-    // axios.get(port + "/api/dept/probs/" + name).then((response) => {
+  function solved(pid) {
+    console.log("FUNCPID IS " + pid.toString());
+    axios.get(port + "/api/dept/solve/" + pid.toString()).then((result) => {
+      console.log(result);
+      window.location.reload();
+    });
 
+    // console.log("clicked");
+  }
+  function flag(pid) {
+    console.log(pid);
+    axios.post(port + "/api/dept/flag", { pid: pid }).then((result) => {
+      
+      console.log(result);
+      window.location.reload();
+    });
+  }
+  useEffect(() => {
     axios
-      .get("http://localhost:7000/api/dept/probs/Electric Department")
+      .post(port + "/api/dept/getdeptname", {
+        did: localStorage.getItem("did"),
+      })
+      .then((result) => {
+        console.log(result.data);
+        setname(result.data);
+      });
+    // axios.get(port + "/api/dept/probs/" + name).then((response) => {
+    axios
+      .get("http://localhost:7000/api/reportprob/problems/" + name)
       .then((response) => {
-        let prob = response.data;
-        if (prob.length == 0) {
-          alert("NO probs");
-        } else {
-          setproblems(prob);
-          console.log(prob);
-        }
+        setproblems(response.data);
+        console.log(response.data);
       })
       .catch((err) => {
-        console.log("error fetching data");
+        console.log("error fetching data ");
       });
-  }, []);
+  }, [name]);
   return (
     <>
       {problems.map((currElem) => {
@@ -56,14 +81,11 @@ const R_Problems = (props) => {
                 boxShadow="dark-lg"
                 mb="7"
                 bg="#e6e6e6"
-                onClick={() => {
-                  navigate("/probdetails/" + currElem.pid);
-                }}
                 cursor={"pointer"}
               >
                 <CardBody>
                   <Image
-                    src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80"
+                    src={currElem.imageurl}
                     alt="Image of the problem"
                     borderRadius="lg"
                   />
@@ -86,16 +108,32 @@ const R_Problems = (props) => {
                 <Divider />
                 <CardFooter>
                   <ButtonGroup spacing="2">
-                    <Button variant="solid" colorScheme="green">
+                    <Button
+                      variant="solid"
+                      colorScheme="green"
+                      onClick={() => {
+                        solved(currElem.pid);
+                      }}
+                    >
                       <CheckIcon mr="2" />
                       Solved
                     </Button>
-                    <Button variant="ghost" colorScheme="blue">
+                    <Button
+                      variant="ghost"
+                      colorScheme="blue"
+                      onClick={() => {
+                        navigate("/probdetails/" + currElem.pid);
+                      }}
+                    >
                       Full Details
                       <InfoIcon ml="2" />
                     </Button>
                     <Spacer />
-                    <Button>
+                    <Button
+                      onClick={() => {
+                        flag(currElem.pid);
+                      }}
+                    >
                       <WarningTwoIcon color="red" />
                     </Button>
                   </ButtonGroup>

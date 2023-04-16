@@ -52,13 +52,13 @@ const Pdetails = () => {
     console.log("sdfsdf");
     event.preventDefault();
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", file); 
     const dat = {
       uid: localStorage.getItem("uid"),
       name: prob,
       description: description,
-      latitude: 13.337797,
-      longitude: 77.114565,
+      latitude: 13.326103,
+      longitude: 78.526446,
       department: department,
     };
     formData.append("data", JSON.stringify(dat));
