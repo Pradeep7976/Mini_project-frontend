@@ -12,14 +12,21 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 const Header = (props) => {
-  
+  const port = "http://localhost:7000";
+  const [details, setdetails] = useState({});
+  useEffect(() => {
+    axios.post(port + "/api/user/details", { uid: props.uid }).then((resu) => {
+      setdetails(resu.data);
+    });
+    console.log("sdfsdf" + props.uid);
+  }, [details]);
   return (
     <>
       <Flex bg="black" mb="10">
-        <Avatar ml="3" mt="3" mb="3" src="https://bit.ly/sage-adebayo" />
+        <Avatar ml="3" mt="3" mb="3" src={details.imageurl} />
         <Box ml="3" mt="3" mb="3">
           <Text color="white" fontWeight="bold">
-            {props.name}
+            {details.name}
           </Text>
           <Badge colorScheme="blue">Department</Badge>
         </Box>

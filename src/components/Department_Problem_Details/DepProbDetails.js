@@ -174,6 +174,25 @@ const DepProbDetails = () => {
                 </Badge>{" "}
                 {problem.pid}
               </Text>
+              <Text color="green">
+                <Badge colorScheme="green" fontSize={"sm"}>
+                  Status :{" "}
+                </Badge>{" "}
+                {problem.status ? (
+                  <strong>
+                    {" "}
+                    <Text fontWeight={"44px"} fontSize={"sm"} color={"green"}>
+                      SOLVED
+                    </Text>
+                  </strong>
+                ) : (
+                  <strong>
+                    <Text fontWeight={"44px"} fontSize={"sm"} color={"red"}>
+                      NOT SOLVED
+                    </Text>
+                  </strong>
+                )}
+              </Text>
             </Text>
           </CardBody>
 

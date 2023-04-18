@@ -37,7 +37,7 @@ function App() {
             <Route path="/dept/:department" element={<Department />} />
             <Route path="/probdetails/:pid" element={<Probdetails />} />
             <Route path="/dept/login" element={<DeptLogin />} />
-            <Route path="/userproblems/:uid" element={<DeptLogin />} />
+            <Route path="/userproblems/:uid" element={<UserProblems />} />
             <Route path="/temp" element={<Temp />} />
           </Routes>
         </Router>

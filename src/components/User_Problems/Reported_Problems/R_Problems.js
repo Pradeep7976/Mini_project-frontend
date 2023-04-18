@@ -18,7 +18,7 @@ import { WarningTwoIcon, CheckIcon, InfoIcon } from "@chakra-ui/icons";
 import Problems from "./R_Problems_api";
 import "./R_Problems.css";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 const reported_problems = Problems;
 //
 //
@@ -33,6 +33,7 @@ const R_Problems = (props) => {
   const [problems, setproblems] = useState([]);
   const [name, setname] = useState("");
   let navigate = useNavigate();
+  const params = useParams();
   function solved(pid) {
     console.log("FUNCPID IS " + pid.toString());
     axios.get(port + "/api/dept/solve/" + pid.toString()).then((result) => {
@@ -50,17 +51,9 @@ const R_Problems = (props) => {
     });
   }
   useEffect(() => {
-    axios
-      .post(port + "/api/dept/getdeptname", {
-        did: localStorage.getItem("did"),
-      })
-      .then((result) => {
-        console.log(result.data);
-        setname(result.data);
-      });
     // axios.get(port + "/api/dept/probs/" + name).then((response) => {
     axios
-      .get("http://localhost:7000/api/reportprob/problems/" + name)
+      .get(port + "/api/user/userdetails/" + params.uid)
       .then((response) => {
         if (response.data.length == 0) {
           alert("Congrats no problems");
@@ -111,16 +104,6 @@ const R_Problems = (props) => {
                 <CardFooter>
                   <ButtonGroup spacing="2">
                     <Button
-                      variant="solid"
-                      colorScheme="green"
-                      onClick={() => {
-                        solved(currElem.pid);
-                      }}
-                    >
-                      <CheckIcon mr="2" />
-                      Solved
-                    </Button>
-                    <Button
                       variant="ghost"
                       colorScheme="blue"
                       onClick={() => {
@@ -131,13 +114,6 @@ const R_Problems = (props) => {
                       <InfoIcon ml="2" />
                     </Button>
                     <Spacer />
-                    <Button
-                      onClick={() => {
-                        flag(currElem.pid);
-                      }}
-                    >
-                      <WarningTwoIcon color="red" />
-                    </Button>
                   </ButtonGroup>
                 </CardFooter>
               </Card>
