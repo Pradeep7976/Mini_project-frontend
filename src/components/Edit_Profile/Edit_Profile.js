@@ -6,6 +6,7 @@ import {
   Tab,
   TabPanel,
   Divider,
+  HStack,
 } from "@chakra-ui/react";
 import {
   Button,
@@ -21,10 +22,12 @@ import {
 } from "@chakra-ui/react";
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const Edit_Profile = () => {
   const port = "http://localhost:7000";
   const [details, setdetails] = useState({});
   const [count, setcount] = useState(0);
+  let navigate = useNavigate();
   useEffect(() => {
     axios
       .post(port + "/api/user/details", {
@@ -35,9 +38,11 @@ const Edit_Profile = () => {
         setdetails(response.data);
       });
     axios
-      .get(port + "/api/user/reported/count/" + localStorage.getItem("uid"))
+      .post(port + "/api/user/reported/count", {
+        uid: localStorage.getItem("uid"),
+      })
       .then((response) => {
-        setcount(response.data);
+        setcount(response.data.ans);
       });
   }, []);
   return (
@@ -92,9 +97,25 @@ const Edit_Profile = () => {
                   </Text>
                 </CardBody>
               </Card>
-              <Button mt="5" colorScheme="red">
+              <Button
+                mt="5"
+                colorScheme="red"
+                onClick={() => {
+                  navigate("/");
+                }}
+              >
                 <ChevronLeftIcon boxSize={8} />
                 Go Back
+              </Button>
+              <Button
+                mt="5"
+                colorScheme="red"
+                marginLeft={5}
+                onClick={() => {
+                  navigate("/userproblems/" + localStorage.getItem("uid"));
+                }}
+              >
+                View Problems Reported
               </Button>
             </TabPanel>
             <TabPanel>
@@ -168,10 +189,12 @@ const Edit_Profile = () => {
                   <Button colorScheme="green">Submit</Button>
                 </CardBody>
               </Card>
-              <Button mt="5" colorScheme="red">
-                <ChevronLeftIcon boxSize={8} />
-                Go Back
-              </Button>
+              <HStack>
+                <Button mt="5" colorScheme="red">
+                  <ChevronLeftIcon boxSize={8} />
+                  Go Back
+                </Button>
+              </HStack>
             </TabPanel>
           </TabPanels>
         </Tabs>

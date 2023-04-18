@@ -31,6 +31,7 @@ const LOP = () => {
               border="50px"
               borderColor="black.200"
               mb="10"
+              cursor={"pointer"}
               onClick={() => {
                 localStorage.setItem("problem", currElem.name);
                 navigate(

@@ -21,12 +21,15 @@ const Progres = () => {
   const [solvedcount, setsolvedcount] = useState(0);
   useEffect(() => {
     axios.get(port + "/api/reportprob/solvedcount").then((response) => {
-      console.log("Solved " + response.data);
-      setsolvedcount(parseInt(response.data));
+      setsolvedcount(parseInt(response.data.ans));
+      console.log("Solved " + solvedcount);
     });
     axios.get(port + "/api/reportprob/totalcount").then((response) => {
-      console.log("Total " + response.data);
-      settotal(parseInt(response.data));
+      if (response.data.ans != 0) settotal(response.data.ans);
+      else {
+        settotal(0);
+      }
+      console.log("Total " + total);
     });
   }, [total, solvedcount]);
   return (

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   AlertTitle,
@@ -7,13 +7,28 @@ import {
   Heading,
   Text,
   Center,
+  useSafeLayoutEffect,
 } from "@chakra-ui/react";
 import { CheckCircleIcon } from "@chakra-ui/icons";
 import { WarningTwoIcon } from "@chakra-ui/icons";
-import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const Thank_You = () => {
-    return (
+  const params = useParams();
+  // const id = params.id;
+  const [id, setid] = useState(false);
+  const text1 =
+    "will work with the concerned department on resolving the issue as soon as possible";
+  const text2 =
+    "The issue is already addressed will work with the concerned department on \n resolving the issue as soon as possible";
+  useEffect(() => {
+    if (params.id == 1) {
+      setid(true);
+    } else {
+      setid(false);
+    }
+  }, [id]);
+  return (
     <>
       <Center>
         <Center d="flex" justifyContent="center" alignItems="center" h="100vh">
@@ -22,10 +37,7 @@ const Thank_You = () => {
             <Heading size="lg" mt="4">
               Thank you for submitting the issue
             </Heading>
-            <Text mt="4">
-              We appreciate your help and will work with the concerned
-              department on resolving the issue as soon as possible.
-            </Text>
+            <Text mt="4">We appreciate your help {id ? text1 : text2}</Text>
             <Alert mt="50" status="error">
               <AlertDescription>
                 <AlertTitle>

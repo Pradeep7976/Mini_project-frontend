@@ -13,10 +13,12 @@ import {
   Container,
   InputLeftAddon,
   Img,
+  VStack,
 } from "@chakra-ui/react";
 // import { AspectRatio } from "@chakra-ui/react";
 import axios from "axios";
 import "./MapboxMap.css";
+import Mapbox from "./Mapbox";
 import { useNavigate, useParams } from "react-router-dom";
 
 // import { prewarm } from "mapbox-gl";
@@ -28,6 +30,10 @@ const Pdetails = () => {
   const [department, setdepartment] = useState(
     localStorage.getItem("department")
   );
+  // eslint-disable-next-line
+  const port = "http://localhost:7000";
+  // eslint-disable-next-line
+  const Port = "https://expensive-hem-elk.cyclic.app";
   const [description, setdescription] = useState("");
   const [longitude, setlongitude] = useState(0.0);
   const [latitude, setlatitude] = useState(0.0);
@@ -39,7 +45,7 @@ const Pdetails = () => {
     event.preventDefault();
     const formData = new FormData();
     formData.append("file", file);
-    const response = await axios.post("http://localhost:7000/upload", formData);
+    const response = await axios.post(port + "/upload", formData);
     setImageUrl(response.data.url);
   }
 
@@ -49,34 +55,44 @@ const Pdetails = () => {
   }
   ///////////////////                 IMAGE                  //////////////////////////////////////
   async function submit(event) {
-    console.log("sdfsdf");
+    console.log("Sending the problem");
     event.preventDefault();
     const formData = new FormData();
-    formData.append("file", file); 
+    formData.append("file", file);
+
     const dat = {
       uid: localStorage.getItem("uid"),
       name: prob,
       description: description,
-      latitude: 13.326103,
-      longitude: 78.526446,
+      latitude: localStorage.getItem("latitude"),
+      longitude: localStorage.getItem("longitude"),
       department: department,
     };
+    if (
+      dat.latitude == 0 ||
+      dat.longitude == 0 ||
+      dat.department == "" ||
+      file == null
+    ) {
+      alert("please fill all the fields");
+      return;
+    }
+    console.log(dat);
     formData.append("data", JSON.stringify(dat));
     const response = await axios
-      .post("http://localhost:7000/api/reportprob/temp", formData, {
+      .post(port + "/api/reportprob/temp", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         }, // set the content type to multipart form data
       })
       .then((resp) => {
         console.log(resp.data);
-        if (!resp.data.done) {
-          alert("the issue has already been noticed have patience");
+        if (resp.data.done) {
+          navigate("/greet/" + 1);
         } else {
-          navigate("/greet");
+          navigate("/greet/" + 2);
         }
       });
-    console.log(response);
   }
   return (
     <>
@@ -89,85 +105,90 @@ const Pdetails = () => {
           </center>
         </Box>
       </Flex>
-      <Container>
-        <Stack spacing={6} mb="10">
-          <InputGroup>
-            <InputLeftAddon children="Name of the problem" />
-            <Input type="text" value={prob} readOnly />l
-          </InputGroup>
+      <VStack>
+        <Box>
+          <Mapbox />
+        </Box>
+        <Container paddingTop={"0rem"}>
+          <Stack spacing={6} mb="10">
+            <InputGroup>
+              <InputLeftAddon children="Name of the problem" />
+              <Input type="text" value={prob} readOnly />
+            </InputGroup>
 
-          {/* If you add the size prop to `InputGroup`, it'll pass it to all its children. */}
-          <InputGroup>
-            <InputLeftAddon children="Associated Department" />
-            <Input
-              type="text"
-              placeholder="Automatically fill"
-              value={department}
-            />
-            l
-          </InputGroup>
-        </Stack>
-        <Text>
-          <strong>Description: </strong>
-        </Text>
+            {/* If you add the size prop to `InputGroup`, it'll pass it to all its children. */}
+            <InputGroup>
+              <InputLeftAddon children="Associated Department" />
+              <Input
+                type="text"
+                placeholder="Automatically fill"
+                value={department}
+              />
+              l
+            </InputGroup>
+          </Stack>
+          <Text>
+            <strong>Description: </strong>
+          </Text>
 
-        <Textarea
-          mb="6"
-          placeholder="Add more details(optional)..."
-          onChange={(e) => {
-            setdescription(e.target.value);
-          }}
-        />
-        <Text>
-          <strong>Upload a photo : </strong>
-          <Img
-            src={
-              imageUrl
-                ? imageUrl
-                : "https://ik.imagekit.io/aj4rz7nxsa/Mini_project/av5c8336583e291842624_Yp22FJ3dQ.png"
-            }
-            width={"17rem"}
+          <Textarea
+            mb="6"
+            placeholder="Add more details(optional)..."
+            onChange={(e) => {
+              setdescription(e.target.value);
+            }}
           />
-        </Text>
+          <Text>
+            <strong>Upload a photo : </strong>
+            {file ? (
+              <Text color={"green"} paddingTop={"1rem"} paddingBottom={"1rem"}>
+                {" "}
+                <strong> Image Selected </strong>{" "}
+              </Text>
+            ) : (
+              <Img
+                src={
+                  imageUrl
+                    ? imageUrl
+                    : "https://ik.imagekit.io/aj4rz7nxsa/Mini_project/av5c8336583e291842624_Yp22FJ3dQ.png"
+                }
+                width={"17rem"}
+              />
+            )}
+          </Text>
 
-        <Input
-          type="file"
-          name="image"
-          accept="image/*"
-          onChange={handleFileChange}
-        ></Input>
-        <Button mt="3" type="submit">
-          Upload
-        </Button>
-        {/* 
-        <AspectRatio mt="10" mb="8" ratio={16 / 9}>
-          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3963.952912260219!2d3.375295414770757!3d6.5276316452784755!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b8b2ae68280c1%3A0xdc9e87a367c3d9cb!2sLagos!5e0!3m2!1sen!2sng!4v1567723392506!5m2!1sen!2sng" />
-        </AspectRatio> */}
-
-        <Center
-          className="pointer"
-          boxShadow="dark-lg"
-          bg="red"
-          h="100px"
-          color="white"
-          mt="10"
-          mb="5"
-          borderRadius={10}
-          onClick={submit}
-        >
-          <Box
-            as="button"
-            borderRadius="md"
+          <Input
+            type="file"
+            name="image"
+            accept="image/*"
+            onChange={handleFileChange}
+          ></Input>
+          <Center
+            className="pointer"
+            boxShadow="dark-lg"
             bg="red"
+            h="100px"
             color="white"
-            px={4}
-            h={8}
-            m="auto"
+            mt="10"
+            mb="5"
+            borderRadius={10}
+            onClick={submit}
           >
-            <Heading>Submit</Heading>
-          </Box>
-        </Center>
-      </Container>
+            <Box
+              as="button"
+              borderRadius="md"
+              bg="red"
+              color="white"
+              px={4}
+              h={8}
+              m="auto"
+            >
+              <Heading>Submit</Heading>
+            </Box>
+          </Center>
+        </Container>
+        <br />
+      </VStack>
     </>
   );
 };
