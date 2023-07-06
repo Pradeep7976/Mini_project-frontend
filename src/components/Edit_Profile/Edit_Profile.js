@@ -141,7 +141,7 @@ const Edit_Profile = () => {
                 colorScheme="red"
                 marginLeft={5}
                 onClick={() => {
-                  navigate("/userproblems/" + localStorage.getItem("uid"));
+                  navigate("/feedback");
                 }}
               >
                 Feedback
