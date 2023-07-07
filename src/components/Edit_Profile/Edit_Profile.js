@@ -120,11 +120,11 @@ const Edit_Profile = () => {
                 mt="5"
                 colorScheme="red"
                 onClick={() => {
-                  navigate("/");
+                  localStorage.removeItem("token");
+                  window.location.reload();
                 }}
               >
-                <ChevronLeftIcon boxSize={8} />
-                Go Back
+                Logout
               </Button>
               <Button
                 mt="5"
