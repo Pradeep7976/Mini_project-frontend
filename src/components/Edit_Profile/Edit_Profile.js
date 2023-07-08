@@ -91,7 +91,8 @@ const Edit_Profile = () => {
                     {details.name}
                   </Text>
                   <Text mb="3" fontSize="xl">
-                    <strong>Age : </strong>Age of the person
+                    <strong>Age : </strong>
+                    {details.age}
                   </Text>
                   <Text mb="3" fontSize="xl">
                     <strong>Phone : </strong>
@@ -101,11 +102,9 @@ const Edit_Profile = () => {
                     <strong>Email : </strong>
                     {details.email}
                   </Text>
+                
                   <Text mb="3" fontSize="xl">
-                    <strong>Area : </strong>Area of the person
-                  </Text>
-                  <Text mb="3" fontSize="xl">
-                    <strong>City : </strong>Area of the person
+                    <strong>City : </strong>{details.city}
                   </Text>
 
                   <Text color="green" fontSize={"xl"}>

@@ -163,6 +163,9 @@ const Pdetails = () => {
       </div>
     );
   }
+  function Takeinputarea() {
+    return <Textarea onChange={(e) => {}} />;
+  }
   function Pdetailspage() {
     return (
       <>
@@ -198,16 +201,9 @@ const Pdetails = () => {
             <Text>
               <strong>Description: </strong>
             </Text>
-
-            <Textarea
-              mb="6"
-              placeholder="Add more details(optional)..."
-              onChange={(e) => {
-                console.log(e.target.value);
-                setdescription(e.target.value);
-              }}
-            />
+            <Textarea />
             <Text>
+              <br />
               <strong>Upload a photo : </strong>
               {file ? (
                 <Text

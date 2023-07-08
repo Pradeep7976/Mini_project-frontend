@@ -19,6 +19,7 @@ const Report = () => {
       mr="5"
       mb="5"
       borderRadius={10}
+      onClick={navi}
     >
       <Box
         as="button"
